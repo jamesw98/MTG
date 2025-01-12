@@ -1,0 +1,37 @@
+﻿@page "/counter"
+@using Mtg.Blazor.Models
+@using Mtg.Blazor.Utils
+@inject ApiUtil api
+@attribute [Authorize]
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private int currentCount = 0;
+
+    private async Task IncrementCount()
+    {
+        var y = new Deck
+        {
+            DeckName = "spooky clowns scare me!",
+            DeckUrl = "https://moxfield.com/decks/StwCiUh6tkGJPpRR1DJLng",
+            Color = 14884368,
+            Commander = "The Jolly Balloon Man"
+        };
+        await api.CreateDeck(y);
+        var x = await api.GetDecks();
+        foreach (var i in x)
+        {
+            Console.WriteLine(i.DeckName);
+        }
+        currentCount++;
+    }
+
+}

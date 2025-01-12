@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mtg.Functions", "Mtg.Functions\Mtg.Functions.csproj", "{B888781D-530A-4C53-B5D3-BA0D8D2E7E49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mtg.Blazor", "Mtg.Blazor\Mtg.Blazor.csproj", "{EE7FC95F-E091-4373-A8A4-F146B4653448}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B888781D-530A-4C53-B5D3-BA0D8D2E7E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B888781D-530A-4C53-B5D3-BA0D8D2E7E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B888781D-530A-4C53-B5D3-BA0D8D2E7E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B888781D-530A-4C53-B5D3-BA0D8D2E7E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7FC95F-E091-4373-A8A4-F146B4653448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7FC95F-E091-4373-A8A4-F146B4653448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7FC95F-E091-4373-A8A4-F146B4653448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7FC95F-E091-4373-A8A4-F146B4653448}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
