@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Mtg.Blazor",
   "resources": {
-    "hash": "sha256-DrjQknxYEcfTgFbC2w3IBcXMyRtdwP6jdfYxBzzaeNk=",
+    "hash": "sha256-SnIII2/2G+yETO/NMhNqZPrylwuop10mTQvXqG8MmQw=",
     "fingerprinting": {
       "Auth0.Core.ipyhqku5mc.wasm": "Auth0.Core.wasm",
       "Blazored.SessionStorage.34xr2ein7y.wasm": "Blazored.SessionStorage.wasm",
@@ -28,7 +28,7 @@
       "Microsoft.JSInterop.9qy0ggsguk.wasm": "Microsoft.JSInterop.wasm",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "Microsoft.JSInterop.WebAssembly.wasm",
       "MongoDB.Bson.szk7txseqz.wasm": "MongoDB.Bson.wasm",
-      "Mtg.Blazor.uzzjlxa3sl.wasm": "Mtg.Blazor.wasm",
+      "Mtg.Blazor.vynfabywb2.wasm": "Mtg.Blazor.wasm",
       "netstandard.6rzkj1rkrc.wasm": "netstandard.wasm",
       "Newtonsoft.Json.ryat7hvx56.wasm": "Newtonsoft.Json.wasm",
       "System.Collections.Concurrent.t118hbpq2j.wasm": "System.Collections.Concurrent.wasm",
@@ -127,7 +127,7 @@
       "Microsoft.JSInterop.9qy0ggsguk.wasm": "sha256-L0BDWxlhVcTchsC8JTqbqu0VQFTvluCsY+IaO2paS6w=",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "sha256-99wG3VH14sWkwPaF5rX6YAcJvtAhDuqonwihvj2m5HA=",
       "MongoDB.Bson.szk7txseqz.wasm": "sha256-+PiQKvmtBDTZDJNJnqQW03J0UKxT520mChf/7XRK0Uk=",
-      "Mtg.Blazor.uzzjlxa3sl.wasm": "sha256-+vXo6fcMApcOoN1FeNYeV6s28TJZqQ/QZrN0ee2V6NE=",
+      "Mtg.Blazor.vynfabywb2.wasm": "sha256-F517+R1GbHJSheirTt2EbZYT1znLaTYSyHT7pnEXv44=",
       "netstandard.6rzkj1rkrc.wasm": "sha256-Ajmva4KZZeR2t6YT3TTM5vlt8+4dHvnfONV5nQlE1yo=",
       "Newtonsoft.Json.ryat7hvx56.wasm": "sha256-PaicHOw1U7HF05kEvZI0Rgg1nwdA8hrzbzdkw1qgUuU=",
       "System.Collections.Concurrent.t118hbpq2j.wasm": "sha256-r3u4q5h24bCLx2zcLnZeSH4FQvphQcI+vZkcLkxpcsU=",
