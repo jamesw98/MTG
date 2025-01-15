@@ -23,7 +23,7 @@ jobs:
     # replace appsettings.json with appsettings.Prod.json
     - name: Use production appsettings.json
       run: |
-        cp src/Mtg.Blazor/appsettings.live.json src/Mtg.Blazor/appsettings.json
+        cp src/Mtg.Blazor/wwwroot/appsettings.live.json src/Mtg.Blazor/wwwroot/appsettings.json
 
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
