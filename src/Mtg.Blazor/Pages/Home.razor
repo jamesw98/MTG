@@ -1,7 +1,44 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@inject ApiUtil Api
 
-<h1>Hello, world!</h1>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge"
+              Style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+    <AuthorizeView>
+        <Authorized>
+            @if (_cardPath != string.Empty)
+            {
+                <MudText Typo="Typo.h2" Align="Align.Center">Eventually I'll put funny quotes here, but I don't have many yet.</MudText>
+            }
+        </Authorized>
+        <NotAuthorized>
+            @if (_cardPath != String.Empty)
+            {
+                <MudText Typo="Typo.h3">You are not logged in.</MudText>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
+    @if (_cardPath == string.Empty)
+    {
+        <MudProgressCircular Indeterminate="true" Size="Size.Medium"/>
+    }
+    else
+    {
+        <img src=@_cardPath alt="funny haha card" style="height: 50%; padding-top: 30px"/>
+    }
+</MudContainer>
 
-Welcome to your new app.
+@code {
+    
+    private string _cardPath = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _cardPath = await Api.GetRandomFunnyCard();
+            StateHasChanged();
+        }
+    }
+
+}

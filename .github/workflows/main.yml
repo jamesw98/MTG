@@ -20,6 +20,11 @@ jobs:
         dotnet-version: '9.0.x'
         include-prerelease: true
 
+    # replace appsettings.json with appsettings.Prod.json
+    - name: Use production appsettings.json
+      run: |
+        cp src/Mtg.Blazor/appsettings.live.json src/Mtg.Blazor/appsettings.json
+
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
       run: dotnet publish src/Mtg.Blazor/Mtg.Blazor.csproj -c Release -o release --nologo

@@ -9,6 +9,11 @@ namespace Mtg.Blazor.Utils;
 
 public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService, HttpClient http)
 {
+    private JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+    
     public async Task<List<Deck>> GetDecks()
     {
         var decks = await CallApi<List<Deck>>(HttpMethod.Get, "Deck");
@@ -25,6 +30,43 @@ public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService,
         var deck = await CallApiWithParam<Deck, Guid>(HttpMethod.Get, "Deck", deckId);
         return deck;
     }
+
+    public async Task<List<Deck>> GetDecksForUser()
+    {
+        var decks = await CallApi<List<Deck>>(HttpMethod.Get, "Deck/Mine");
+        return decks;
+    }
+
+    #region SCRYFALL
+    
+    /// <summary>
+    /// Gets a random funny card from Scryfall.
+    /// </summary>
+    /// <returns>An url to an image.</returns>
+    public async Task<string> GetRandomFunnyCard()
+    {
+        var response = await http.GetAsync("https://api.scryfall.com/cards/random?q=is:funny+-set:da1");
+        var jsonString = await response.Content.ReadAsStringAsync();
+        var obj = JsonSerializer.Deserialize<ScryFallCard>(jsonString, _jsonOptions) 
+                  ?? throw new ArgumentException("Could not parse response from ScryFall api.");
+        return obj.ImageUris.Png;
+    }
+
+    /// <summary>
+    /// Gets commanders that match the user's requested query.
+    /// </summary>
+    /// <param name="query">The query.</param>
+    /// <returns>A list of possible commanders that match the requested query.</returns>
+    public async Task<List<ScryFallCard>> GetCommanders(string query)
+    {
+        var response = await http.GetAsync($"https://api.scryfall.com/cards/search?q=is:commander+name:{query}");
+        var jsonString = await response.Content.ReadAsStringAsync();
+        var obj = JsonSerializer.Deserialize<ScryFallList>(jsonString, _jsonOptions)
+                ?? throw new ArgumentException("Could not parse response from ScryFall api.");
+        return obj.Data;
+    }
+    
+    #endregion
 
     #region PRIVATE
     

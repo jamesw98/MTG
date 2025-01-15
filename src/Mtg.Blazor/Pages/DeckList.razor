@@ -1,0 +1,40 @@
+@page "/decks"
+
+@inject ApiUtil Api
+@attribute [Authorize]
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <div class="d-flex">
+        <MudTable T="Deck" Items="_decks">
+            <HeaderContent>
+                <MudTh>Deck Name</MudTh>
+                <MudTh>Commander</MudTh>
+                <MudTh>Wins</MudTh>
+                <MudTh>Matches Played</MudTh>
+                <MudTh>Win Rate</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTh></MudTh>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</MudContainer>
+
+@code {
+
+    private List<Deck> _decks = new();
+    
+    /// <summary>
+    /// Code that runs after initial render.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _decks = await Api.GetDecksForUser();
+            StateHasChanged();
+        }
+    }
+
+}

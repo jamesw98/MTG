@@ -41,9 +41,15 @@ public class Deck
     public required string Commander { get; set; }
     
     /// <summary>
+    /// The mana colors for this deck.
+    /// </summary>
+    public IEnumerable<string> ColorIdentity { get; set; }
+    
+    /// <summary>
     /// Optional: Secondary commander.
     /// </summary>
     public string? SecondaryCommander { get; set; }
+    
     
     /// <summary>
     /// The user that made this deck.

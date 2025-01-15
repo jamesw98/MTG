@@ -34,13 +34,26 @@ public class MongoUtil
     
     public List<Deck> GetDecks()
     {
-        var result = GetCollection<Deck>().AsQueryable().ToList();
+        var result = GetCollection<Deck>()
+            .AsQueryable()
+            .ToList();
         return result;
     }
 
     public Deck? GetDeck(Guid guid)
     {
-        return GetCollection<Deck>().AsQueryable().FirstOrDefault(x => x.DeckGuid == guid);
+        return GetCollection<Deck>()
+            .AsQueryable()
+            .FirstOrDefault(x => x.DeckGuid == guid);
+    }
+
+    public List<Deck> GetDecksForUser(User user)
+    {
+        var result = GetCollection<Deck>()
+            .AsQueryable()
+            .Where(x => x.User.UserId == user.UserId)
+            .ToList();
+        return result;
     }
 
     #endregion

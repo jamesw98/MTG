@@ -1,0 +1,55 @@
+@inject ApiUtil Api
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Deck Name" Class="m-3" Variant="Variant.Outlined" @bind-Value="_newDeck.DeckName"/>
+        <MudSpacer/>
+        <MudTextField Label="Deck Url" Class="m-3" Variant="Variant.Outlined" @bind-Value="_newDeck.DeckUrl"/>
+        <MudSpacer/>
+        <MudColorPicker Label="Display Color" ValueChanged="(e) => { _newDeck.Color =  int.Parse(e.Value, System.Globalization.NumberStyles.HexNumber);}"/>
+        <MudSpacer/>
+        <MudAutocomplete T="ScryFallCard" Label="Commander" SearchFunc="GetCommanders" DebounceInterval="300" ValueChanged="CommanderChanged"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Variant="Variant.Filled" Color="Color.Info">Close</MudButton>
+        <MudButton OnClick="Create" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    
+    private Deck _newDeck = new()
+    {
+        DeckName = string.Empty,
+        DeckUrl = string.Empty,
+        Color = 255,
+        Commander = string.Empty
+    };
+
+    private async Task<IEnumerable<ScryFallCard>> GetCommanders(string query)
+    {
+        if (query.Length < 4)
+        {
+            return new List<ScryFallCard>();
+        }
+        return await Api.GetCommanders(query);
+    }
+
+    private async Task CommanderChanged(ScryFallCard commander)
+    {
+        _newDeck.Commander = commander.Name;
+        _newDeck.ColorIdentity = commander.ColorIdentity;
+    }
+
+    private async Task Create()
+    {
+        await Api.CreateDeck(_newDeck);
+        Snackbar.Add("Deck created!");
+        Close();
+    }
+    
+    private void Close() => MudDialog.Cancel();
+}
