@@ -1,3 +1,4 @@
+using System.Data;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -7,13 +8,30 @@ using Mtg.Blazor.Models;
 
 namespace Mtg.Blazor.Utils;
 
-public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService, HttpClient http)
+public class ApiUtil
 {
     private JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
-    
+
+    private readonly TokenUtil _tokenUtil;
+    private readonly ISessionStorageService _storageService;
+    private readonly HttpClient _http;
+
+    private readonly string _functionsUri; 
+
+    public ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService, HttpClient http, IConfiguration config)
+    {
+        _tokenUtil = tokenUtil;
+        _storageService = storageService;
+        _http = http;
+
+        var uri = config.GetSection("FunctionsUri").Value
+            ?? throw new DataException("Could not find FunctionUri configuration section.");
+        _functionsUri = uri;
+    }
+
     public async Task<List<Deck>> GetDecks()
     {
         var decks = await CallApi<List<Deck>>(HttpMethod.Get, "Deck");
@@ -45,7 +63,7 @@ public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService,
     /// <returns>An url to an image.</returns>
     public async Task<string> GetRandomFunnyCard()
     {
-        var response = await http.GetAsync("https://api.scryfall.com/cards/random?q=is:funny+-set:da1");
+        var response = await _http.GetAsync("https://api.scryfall.com/cards/random?q=is:funny+-set:da1");
         var jsonString = await response.Content.ReadAsStringAsync();
         var obj = JsonSerializer.Deserialize<ScryFallCard>(jsonString, _jsonOptions) 
                   ?? throw new ArgumentException("Could not parse response from ScryFall api.");
@@ -59,7 +77,7 @@ public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService,
     /// <returns>A list of possible commanders that match the requested query.</returns>
     public async Task<List<ScryFallCard>> GetCommanders(string query)
     {
-        var response = await http.GetAsync($"https://api.scryfall.com/cards/search?q=is:commander+name:{query}");
+        var response = await _http.GetAsync($"https://api.scryfall.com/cards/search?q=is:commander+name:{query}");
         var jsonString = await response.Content.ReadAsStringAsync();
         var obj = JsonSerializer.Deserialize<ScryFallList>(jsonString, _jsonOptions)
                 ?? throw new ArgumentException("Could not parse response from ScryFall api.");
@@ -99,24 +117,24 @@ public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService,
 
     private async Task<HttpResponseMessage> CallApiBaseWithParam<TParam>(HttpMethod method, string uri, TParam parameters)
     {
-        if (tokenUtil.Jwt == string.Empty)
+        if (_tokenUtil.Jwt == string.Empty)
         {
-            await tokenUtil.GetJwt(storageService);
+            await _tokenUtil.GetJwt(_storageService);
         }
 
         var req = CreateBaseRequestWithParam(method, uri, parameters);
-        var res = await http.SendAsync(req);
+        var res = await _http.SendAsync(req);
         return res;
     }
     
     private HttpRequestMessage CreateBaseRequestWithParam<TParam>(HttpMethod method, string uri, TParam parameters, bool authenticated=true)
     {
-        var request = new HttpRequestMessage(method, $"http://localhost:7047/{uri}");
+        var request = new HttpRequestMessage(method, $"{_functionsUri}{uri}");
         request.Headers.TryAddWithoutValidation("accept", "*/*");
 
         if (authenticated)
         {
-            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {tokenUtil.Jwt}");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {_tokenUtil.Jwt}");
         }
 
         request.Content = new StringContent(JsonSerializer.Serialize(parameters));
@@ -154,24 +172,24 @@ public class ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService,
 
     private async Task<HttpResponseMessage> CallApiBase(HttpMethod method, string uri)
     {
-        if (tokenUtil.Jwt == string.Empty)
+        if (_tokenUtil.Jwt == string.Empty)
         {
-            await tokenUtil.GetJwt(storageService);
+            await _tokenUtil.GetJwt(_storageService);
         }
 
         var req = CreateBaseRequest(method, uri);
-        var res = await http.SendAsync(req);
+        var res = await _http.SendAsync(req);
         return res;
     }
     
     private HttpRequestMessage CreateBaseRequest(HttpMethod method, string uri, bool authenticated=true)
     {
-        var request = new HttpRequestMessage(method, $"http://localhost:7047/{uri}");
+        var request = new HttpRequestMessage(method, $"{_functionsUri}{uri}");
         request.Headers.TryAddWithoutValidation("accept", "*/*");
 
         if (authenticated)
         {
-            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {tokenUtil.Jwt}");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {_tokenUtil.Jwt}");
         }
 
         return request;
