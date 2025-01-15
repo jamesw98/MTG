@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Mtg.Blazor",
   "resources": {
-    "hash": "sha256-yNSLZXrxsVrb+s94VGYprpkKHe7md0R6q9d0A6ij/wA=",
+    "hash": "sha256-hRAUwX/7xUYeWRdOCW+XU4nf8xQ/HqEhmPqTx/Z2Onc=",
     "fingerprinting": {
       "Auth0.Core.ipyhqku5mc.wasm": "Auth0.Core.wasm",
       "Blazored.SessionStorage.34xr2ein7y.wasm": "Blazored.SessionStorage.wasm",
@@ -29,8 +29,8 @@
       "Microsoft.JSInterop.2d19zz79ld.wasm": "Microsoft.JSInterop.wasm",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "Microsoft.JSInterop.WebAssembly.wasm",
       "MongoDB.Bson.szk7txseqz.wasm": "MongoDB.Bson.wasm",
-      "Mtg.Blazor.9b9rduuwa9.wasm": "Mtg.Blazor.wasm",
-      "MudBlazor.4vyeks7whp.wasm": "MudBlazor.wasm",
+      "Mtg.Blazor.fqv9m5z56u.wasm": "Mtg.Blazor.wasm",
+      "MudBlazor.tjvdpgjmdm.wasm": "MudBlazor.wasm",
       "netstandard.e3ntzf0290.wasm": "netstandard.wasm",
       "Newtonsoft.Json.ryat7hvx56.wasm": "Newtonsoft.Json.wasm",
       "System.Collections.Concurrent.1shtx04bc2.wasm": "System.Collections.Concurrent.wasm",
@@ -131,8 +131,8 @@
       "Microsoft.JSInterop.2d19zz79ld.wasm": "sha256-2nGRykN4fLaXw0pzWrJN49QezClnxD8+ycOa/TwaOtQ=",
       "Microsoft.JSInterop.WebAssembly.heoad7mujs.wasm": "sha256-99wG3VH14sWkwPaF5rX6YAcJvtAhDuqonwihvj2m5HA=",
       "MongoDB.Bson.szk7txseqz.wasm": "sha256-+PiQKvmtBDTZDJNJnqQW03J0UKxT520mChf/7XRK0Uk=",
-      "Mtg.Blazor.9b9rduuwa9.wasm": "sha256-G1MWpgq34/6IGYfLUSIpQqVGNCZXBrNTThimJN80vIQ=",
-      "MudBlazor.4vyeks7whp.wasm": "sha256-AJzr2TTjSO5bT1pz5jmTQyKh+t72ugvvd7EnIajlHIU=",
+      "Mtg.Blazor.fqv9m5z56u.wasm": "sha256-54LkimE/JstIofkiQ3Wy3xkcEUhhUSMpToFqprRiEg0=",
+      "MudBlazor.tjvdpgjmdm.wasm": "sha256-+Ynho8UIB91/Tbkkob9H3PPylte3St8A1Qb47E6VWQM=",
       "netstandard.e3ntzf0290.wasm": "sha256-KjlLIQZ0fwcQKLjcenpaVoXKMKdCBUg8EG2JffL8ZiQ=",
       "Newtonsoft.Json.ryat7hvx56.wasm": "sha256-PaicHOw1U7HF05kEvZI0Rgg1nwdA8hrzbzdkw1qgUuU=",
       "System.Collections.Concurrent.1shtx04bc2.wasm": "sha256-QcDffa3VTiUCTrjmKcGH/o1JyybbLQP1T3tM9pnttkk=",
