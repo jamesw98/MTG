@@ -50,5 +50,10 @@ public class Deck
     /// <summary>
     /// The user that made this deck.
     /// </summary>
-    public User User { get; set; } 
+    public User User { get; set; }
+
+    public bool IsValid()
+    {
+        return DeckName.Trim() != string.Empty && DeckUrl != string.Empty && Commander != string.Empty;
+    }
 }

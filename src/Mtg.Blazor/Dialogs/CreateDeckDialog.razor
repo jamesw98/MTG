@@ -13,13 +13,22 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Close" Variant="Variant.Filled" Color="Color.Info">Close</MudButton>
-        <MudButton OnClick="Create" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+        @if (_isLoading)
+        {
+            <MudProgressCircular Size="Size.Small" Color="Color.Primary" />
+        }
+        else
+        {
+            <MudButton OnClick="Create" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+        }
     </DialogActions>
 </MudDialog>
 
 @code {
 
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+
+    private bool _isLoading = false;
     
     private Deck _newDeck = new()
     {
@@ -46,9 +55,31 @@
 
     private async Task Create()
     {
-        await Api.CreateDeck(_newDeck);
-        Snackbar.Add("Deck created!");
-        Close();
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+
+        if (!_newDeck.IsValid())
+        {
+            Snackbar.Add("Deck is not valid! Please ensure all fields are populated.", Severity.Error);
+            return;
+        }
+
+        try
+        {
+            _isLoading = true;
+            await Api.CreateDeck(_newDeck);
+            Snackbar.Add("Deck created!", Severity.Success);
+            Close();
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"An error occured!\n{e.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+        
     }
     
     private void Close() => MudDialog.Cancel();
