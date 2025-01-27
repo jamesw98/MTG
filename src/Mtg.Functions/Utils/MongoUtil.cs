@@ -24,20 +24,35 @@ public class MongoUtil
         _db = mongo.GetDatabase("jw-dev");
     }
 
+    #region MATCHES
+
+    public void CreateMatch(Match newMatch)
+    {
+        GetCollection<Match>().InsertOne(newMatch);
+    }
+
+    public List<Match> GetMatches()
+    {
+        return GetCollection<Match>()
+            .AsQueryable()
+            .ToList();
+    }
+
+    #endregion
+    
     #region DECKS
 
     public void CreateDeck(Deck newDeck, User user)
     {
-        newDeck.User = user;
+        newDeck.UserId = user.UserId;
         GetCollection<Deck>().InsertOne(newDeck);
     }
     
     public List<Deck> GetDecks()
     {
-        var result = GetCollection<Deck>()
+        return GetCollection<Deck>()
             .AsQueryable()
             .ToList();
-        return result;
     }
 
     public Deck? GetDeck(Guid guid)
@@ -49,11 +64,18 @@ public class MongoUtil
 
     public List<Deck> GetDecksForUser(User user)
     {
-        var result = GetCollection<Deck>()
+        return GetCollection<Deck>()
             .AsQueryable()
-            .Where(x => x.User.UserId == user.UserId)
+            .Where(x => x.UserId == user.UserId)
             .ToList();
-        return result;
+    }
+
+    public List<Deck> SearchDecks(string query)
+    {
+        return GetCollection<Deck>()
+            .AsQueryable()
+            .Where(x => x.DeckName.ToLower().Contains(query.ToLower()))
+            .ToList();
     }
 
     #endregion

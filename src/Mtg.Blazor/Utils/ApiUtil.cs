@@ -10,17 +10,42 @@ namespace Mtg.Blazor.Utils;
 
 public class ApiUtil
 {
-    private JsonSerializerOptions _jsonOptions = new()
+    /// <summary>
+    /// JSON serialization options to use throughout this util.
+    /// </summary>
+    private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
+    /// <summary>
+    /// Lets us get a JWT for the user.
+    /// </summary>
     private readonly TokenUtil _tokenUtil;
+    
+    /// <summary>
+    /// Lets us access session storage.
+    /// </summary>
     private readonly ISessionStorageService _storageService;
+    
+    /// <summary>
+    /// An HTTP client.
+    /// </summary>
     private readonly HttpClient _http;
 
+    /// <summary>
+    /// URL for this environment's Azure fuctions.
+    /// </summary>
     private readonly string _functionsUri; 
 
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="tokenUtil"></param>
+    /// <param name="storageService"></param>
+    /// <param name="http"></param>
+    /// <param name="config"></param>
+    /// <exception cref="DataException"></exception>
     public ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService, HttpClient http, IConfiguration config)
     {
         _tokenUtil = tokenUtil;
@@ -32,27 +57,66 @@ public class ApiUtil
         _functionsUri = uri;
     }
 
+    /// <summary>
+    /// Gets all decks.
+    /// </summary>
+    /// <returns>A list of all decks.</returns>
     public async Task<List<Deck>> GetDecks()
     {
         var decks = await CallApi<List<Deck>>(HttpMethod.Get, "Deck");
         return decks;
     }
 
+    /// <summary>
+    /// Create a deck.
+    /// </summary>
+    /// <param name="newDeck">The deck to create.</param>
     public async Task CreateDeck(Deck newDeck)
     {
-        await CallApiVoidWithParam(HttpMethod.Post, "Deck", new CreateDeckRequest{NewDeck = newDeck});
+        await CallApiVoidWithParam(HttpMethod.Post, "Deck", new CreateDeckRequest
+        {
+            NewDeck = newDeck
+        });
     }
 
+    /// <summary>
+    /// Gets a single deck.
+    /// </summary>
+    /// <param name="deckId">The ID of the deck.</param>
+    /// <returns>A deck.</returns>
     public async Task<Deck> GetDeck(Guid deckId)
     {
         var deck = await CallApiWithParam<Deck, Guid>(HttpMethod.Get, "Deck", deckId);
         return deck;
     }
 
+    /// <summary>
+    /// Gets all decks a user has created.
+    /// </summary>
+    /// <returns>A list of decks.</returns>
     public async Task<List<Deck>> GetDecksForUser()
     {
         var decks = await CallApi<List<Deck>>(HttpMethod.Get, "Deck/Mine");
         return decks;
+    }
+
+    /// <summary>
+    /// Searches our database for decks that match the query.
+    /// </summary>
+    /// <param name="query">The query from the user.</param>
+    /// <returns>A list of decks that match.</returns>
+    public async Task<List<Deck>> SearchDecks(string query)
+    {
+        var decks = await CallApi<List<Deck>>(HttpMethod.Get, $"Search?query={query}");
+        return decks;
+    }
+
+    public async Task CreateMatch(Match match)
+    {
+        await CallApiVoidWithParam<CreateMatchRequest>(HttpMethod.Post, "Match", new CreateMatchRequest
+        {
+            NewMatch = match
+        });
     }
 
     #region SCRYFALL

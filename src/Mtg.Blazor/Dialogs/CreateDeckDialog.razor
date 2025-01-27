@@ -7,9 +7,21 @@
         <MudSpacer/>
         <MudTextField Label="Deck Url" Class="m-3" Variant="Variant.Outlined" @bind-Value="_newDeck.DeckUrl"/>
         <MudSpacer/>
-        <MudColorPicker Label="Display Color" ValueChanged="(e) => { _newDeck.Color =  int.Parse(e.Value, System.Globalization.NumberStyles.HexNumber);}"/>
+        <MudColorPicker Label="Display Color"
+                        ValueChanged="(e) => { _newDeck.Color = int.Parse(e.Value, System.Globalization.NumberStyles.HexNumber);}"/>
         <MudSpacer/>
-        <MudAutocomplete T="ScryFallCard" Label="Commander" SearchFunc="GetCommanders" DebounceInterval="300" ValueChanged="CommanderChanged"/>
+        <MudAutocomplete T="ScryFallCard"
+                         Label="Commander"
+                         SearchFunc="GetCommanders"
+                         DebounceInterval="300"
+                         ValueChanged="CommanderChanged"/>
+        <MudSpacer/>
+        <MudAutocomplete Disabled="_newDeck.Commander == string.Empty"
+                         T="ScryFallCard" 
+                         Label="Secondary Commander/Partner"
+                         SearchFunc="GetCommanders"
+                         DebounceInterval="300"
+                         ValueChanged="SecondaryCommanderChanged"/>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Close" Variant="Variant.Filled" Color="Color.Info">Close</MudButton>
@@ -26,9 +38,12 @@
 
 @code {
 
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
 
     private bool _isLoading = false;
+
+    private ScryFallCard _selectedCard = new ScryFallCard();
     
     private Deck _newDeck = new()
     {
@@ -38,9 +53,9 @@
         Commander = string.Empty
     };
 
-    private async Task<IEnumerable<ScryFallCard>> GetCommanders(string query)
+    private async Task<IEnumerable<ScryFallCard>> GetCommanders(string query, CancellationToken token)
     {
-        if (query.Length < 4)
+        if (query.Length < 3)
         {
             return new List<ScryFallCard>();
         }
@@ -51,6 +66,12 @@
     {
         _newDeck.Commander = commander.Name;
         _newDeck.ColorIdentity = commander.ColorIdentity;
+    }
+
+    private async Task SecondaryCommanderChanged(ScryFallCard secondaryCommander)
+    {
+        _newDeck.SecondaryCommander = secondaryCommander.Name;
+        _newDeck.ColorIdentity = secondaryCommander.ColorIdentity.Union(_newDeck.ColorIdentity);
     }
 
     private async Task Create()

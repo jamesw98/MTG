@@ -17,7 +17,7 @@ public class User
     {
         UserId = claims.FirstOrDefault(x => x.Type == "sub")?.Value ?? throw new ArgumentException(InvalidJwtMessage); 
         Nickname = claims.FirstOrDefault(x => x.Type == "nickname")?.Value ?? throw new ArgumentException(InvalidJwtMessage);
-        FirstName = claims.FirstOrDefault(x => x.Type == "given_name")?.Value ?? throw new ArgumentException(InvalidJwtMessage);
-        LastName = claims.FirstOrDefault(x => x.Type == "family_name")?.Value ?? throw new ArgumentException(InvalidJwtMessage);
+        FirstName = claims.FirstOrDefault(x => x.Type == "given_name")?.Value ?? Nickname;
+        LastName = claims.FirstOrDefault(x => x.Type == "family_name")?.Value ?? string.Empty;
     }
 }

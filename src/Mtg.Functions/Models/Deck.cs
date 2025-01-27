@@ -6,6 +6,7 @@ namespace Mtg.Functions.Models;
 /// <summary>
 /// Represents a single deck.
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Deck
 {
     /// <summary>
@@ -50,9 +51,8 @@ public class Deck
     /// </summary>
     public string? SecondaryCommander { get; set; }
     
-    
     /// <summary>
-    /// The user that made this deck.
+    /// ID of the user that made this deck.
     /// </summary>
-    public User User { get; set; } 
+    public string UserId { get; set; }
 }

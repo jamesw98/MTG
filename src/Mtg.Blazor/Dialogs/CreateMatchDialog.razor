@@ -1,0 +1,125 @@
+@inject ApiUtil Api
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudAutocomplete T="Deck" Label="Deck" SearchFunc="GetDecks" DebounceInterval="300" ValueChanged="DeckChanged"/>
+        <MudSpacer/>
+        <MudChipSet T="Deck" AllClosable="true" OnClose="OnChipClosed">
+            @foreach (var d in _newMatch.Decks)
+            {
+                <MudChip Value="@d" Color="Color.Primary">@d.DeckName</MudChip>
+            }
+        </MudChipSet>
+        <MudSpacer/>
+        <MudAutocomplete T="Deck" Label="Winner" SearchFunc="SearchSelectedDecks" DebounceInterval="300" ValueChanged="WinnerChanged"></MudAutocomplete>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Variant="Variant.Filled" Color="Color.Info">Close</MudButton>
+        @if (_isLoading)
+        {
+            <MudProgressCircular Size="Size.Small" Color="Color.Primary" />
+        }
+        else
+        {
+            <MudButton OnClick="Create" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    private bool _isLoading = false;
+
+    private Deck _selectedDeck = new Deck
+    {
+        DeckName = string.Empty,
+        DeckUrl = string.Empty,
+        Color = 0,
+        Commander = string.Empty
+    };
+
+    private Match _newMatch = new Match
+    {
+        Winner = new Deck
+        {
+            DeckName = string.Empty,
+            DeckUrl = string.Empty,
+            Color = 0,
+            Commander = string.Empty
+        },
+        Decks = new()
+    };
+
+    private async Task<IEnumerable<Deck>> GetDecks(string query, CancellationToken token)
+    {
+        if (query.Length < 3)
+        {
+            return [];
+        }
+        return await Api.SearchDecks(query);
+    }
+
+    private async Task<IEnumerable<Deck>> SearchSelectedDecks(string query, CancellationToken token)
+    {
+        return _newMatch.Decks.Where(x => x.DeckName.Contains(query));
+    }
+
+    private async Task DeckChanged(Deck deck) 
+    {
+        if (_newMatch.Decks.Count == 4)
+        {
+            Snackbar.Add("No more than 4 decks can be added", Severity.Error);
+        }
+        
+        _newMatch.Decks.Add(deck);
+    }
+
+    private async Task WinnerChanged(Deck deck)
+    {
+        _newMatch.Winner = deck;
+    }
+
+    private void OnChipClosed(MudChip<Deck> chip)
+    {
+        Console.WriteLine(chip.Value?.DeckName);
+        if (chip.Value != null)
+        {
+            _newMatch.Decks.Remove(chip.Value);
+        }
+    }
+
+    private async Task Create()
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+
+        if (!_newMatch.IsValid())
+        {
+            Snackbar.Add("Match is not valid! Please ensure all fields are populated.", Severity.Error);
+            return;
+        }
+        
+        try
+        {
+            _isLoading = true;
+            await Api.CreateMatch(_newMatch);
+            Snackbar.Add("Match logged!", Severity.Success);
+            Close();
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"An error occured!\n{e.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+        
+    }
+    
+    private void Close() => MudDialog.Cancel();
+}

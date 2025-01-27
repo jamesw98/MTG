@@ -46,14 +46,19 @@ public class Deck
     /// Optional: Secondary commander.
     /// </summary>
     public string? SecondaryCommander { get; set; }
-    
+
     /// <summary>
-    /// The user that made this deck.
+    /// The user that created this deck.
     /// </summary>
-    public User User { get; set; }
+    public string UserId { get; set; }
 
     public bool IsValid()
     {
         return DeckName.Trim() != string.Empty && DeckUrl != string.Empty && Commander != string.Empty;
+    }
+
+    public override string ToString()
+    {
+        return DeckName;
     }
 }

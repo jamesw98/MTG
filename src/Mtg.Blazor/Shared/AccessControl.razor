@@ -9,7 +9,7 @@
     <Authorized>
         <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OpenDeckCreationDialog">Deck</MudButton>
         <div style="flex-grow: 0.01"/>
-        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary">Match</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OpenMatchCreationDialog">Match</MudButton>
         <div style="flex-grow: 0.01"/>
         <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="BeginSignOut">Logout</MudButton>
     </Authorized>
@@ -24,6 +24,12 @@
     {
         var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
         await DialogService.ShowAsync<CreateDeckDialog>("Create Deck", options);
+    }
+
+    private async Task OpenMatchCreationDialog()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        await DialogService.ShowAsync<CreateMatchDialog>("Add Match", options);
     }
     
     private async Task BeginSignOut(MouseEventArgs args)
