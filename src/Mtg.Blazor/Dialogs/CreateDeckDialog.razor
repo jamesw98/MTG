@@ -50,7 +50,8 @@
         DeckName = string.Empty,
         DeckUrl = string.Empty,
         Color = 255,
-        Commander = string.Empty
+        Commander = string.Empty,
+        UserId = string.Empty
     };
 
     private async Task<IEnumerable<ScryFallCard>> GetCommanders(string query, CancellationToken token)
@@ -66,6 +67,7 @@
     {
         _newDeck.Commander = commander.Name;
         _newDeck.ColorIdentity = commander.ColorIdentity;
+        _newDeck.ImageUrl = commander.ImageUris?.Png ?? commander.CardFaces.First().ImageUris.Png;
     }
 
     private async Task SecondaryCommanderChanged(ScryFallCard secondaryCommander)

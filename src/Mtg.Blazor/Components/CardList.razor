@@ -1,0 +1,21 @@
+<MudStack Wrap="Wrap.Wrap" Row="true" AlignItems="AlignItems.Center" Class="d-flex justify-center align-center">
+    @foreach (var d in Decks)
+    {
+        <MudPaper style="width: 15%; height: auto;" Class="d-flex flex-column justify-center align-center">
+            <MudText Typo="Typo.h5" Class="mt-2">@d.DeckName</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mb-2">by @d.UserName</MudText>
+            <img src=@d.ImageUrl alt="@d.Commander" class="m-2" style="width: 80%; height: 80%;"/>
+            <MudStack Row="true" Class="mb-1">
+                <MudButton Variant="Variant.Outlined" Disabled="true" Size="Size.Small">Stats</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Href="@d.DeckUrl" Target="_blank">List</MudButton>
+            </MudStack>
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+
+    [Parameter]
+    public List<Deck> Decks { get; set; }
+
+}

@@ -34,14 +34,6 @@
 
     private bool _isLoading = false;
 
-    private Deck _selectedDeck = new Deck
-    {
-        DeckName = string.Empty,
-        DeckUrl = string.Empty,
-        Color = 0,
-        Commander = string.Empty
-    };
-
     private Match _newMatch = new Match
     {
         Winner = new Deck
@@ -49,7 +41,8 @@
             DeckName = string.Empty,
             DeckUrl = string.Empty,
             Color = 0,
-            Commander = string.Empty
+            Commander = string.Empty,
+            UserId = string.Empty
         },
         Decks = new()
     };

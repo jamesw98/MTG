@@ -1,0 +1,38 @@
+@page "/decks"
+@using Mtg.Blazor.Components
+
+@inject ApiUtil Api
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex flex-column justify-center align-center">
+            <MudText Class="d-flex" Typo="Typo.h3">Decks</MudText>
+            <br/>
+            @if (_cardView)
+            {
+                <CardList Decks="@_decks"/>
+            }            
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    private List<Deck> _decks = new();
+    private bool _cardView = true;
+
+    /// <summary>
+    /// Code that runs after initial render.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _decks = await Api.GetDecks();
+            StateHasChanged();
+        }
+    }
+
+}
