@@ -50,9 +50,25 @@ public class MongoUtil
     
     public List<Deck> GetDecks()
     {
-        return GetCollection<Deck>()
+        var decks = GetCollection<Deck>()
             .AsQueryable()
             .ToList();
+
+        var users = GetCollection<User>()
+            .AsQueryable()
+            .Where(x => decks.Any(d => d.UserId == x.UserId))
+            .ToList()
+            .ToDictionary(k => k.UserId, v => v.UserName);
+
+        foreach (var d in decks)
+        {
+            if (d is not null)
+            {
+                d.UserName = users.GetValueOrDefault(d.UserId, "Unknown");
+            }
+        }
+
+        return decks.ToList();
     }
 
     public Deck? GetDeck(Guid guid)

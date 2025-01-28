@@ -54,5 +54,15 @@ public class Deck
     /// <summary>
     /// ID of the user that made this deck.
     /// </summary>
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
+
+    /// <summary>
+    /// Name of the user that made this deck.
+    /// </summary>
+    public string UserName { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Scryfall card image url for the commander.
+    /// </summary>
+    public string ImageUrl { get; set; } = string.Empty;
 }
