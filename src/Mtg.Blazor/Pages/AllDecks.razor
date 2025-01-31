@@ -5,14 +5,41 @@
 @attribute [Authorize]
 
 <AuthorizeView>
-    <Authorized>
+    <Authorized Context="AuthContext">
         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex flex-column justify-center align-center">
-            <MudText Class="d-flex" Typo="Typo.h3">Decks</MudText>
+            <MudText Class="d-flex mb-2" Typo="Typo.h3">Decks</MudText>
+            <br/>
+            <MudStack Row="true">
+                <MudSwitch @bind-Value="_cardView" Label="Switch view" Color="Color.Primary"/>
+            </MudStack>
             <br/>
             @if (_cardView)
             {
                 <CardList Decks="@_decks"/>
-            }            
+            }
+            else
+            {
+                <MudTable T="Deck" Items="_decks">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Commander</MudTh>
+                        <MudTh>Created By</MudTh>
+                        <MudTh>View Stats</MudTh>
+                        <MudTh>View List</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.DeckName</MudTd>
+                        <MudTd>@($"{context.Commander}{(context.SecondaryCommander is not null ? $" & {context.SecondaryCommander}" : string.Empty)}")</MudTd>
+                        <MudTd>@context.UserName</MudTd>
+                        <MudTd>
+                            <MudButton Variant="Variant.Outlined" Disabled="true" Size="Size.Small">Stats</MudButton>        
+                        </MudTd>
+                        <MudTd>
+                            <MudButton Variant="Variant.Outlined" Size="Size.Small" Href="@context.DeckUrl" Target="_blank">List</MudButton>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
         </MudContainer>
     </Authorized>
 </AuthorizeView>
