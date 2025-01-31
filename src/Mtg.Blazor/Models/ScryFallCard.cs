@@ -8,8 +8,9 @@ namespace Mtg.Blazor.Models;
 /// </summary>
 public class ScryFallCard
 {
-    [JsonPropertyName("image_uris")]
-    public ImageUris ImageUris { get; set; }
+    [JsonPropertyName("image_uris")] public ImageUris? ImageUris { get; set; }
+
+    [JsonPropertyName("card_faces")] public List<CardFace> CardFaces { get; set; } = new();
     
     [JsonPropertyName("name")]
     public string Name { get; set; }

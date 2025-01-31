@@ -1,0 +1,44 @@
+@page "/matches"
+@using Mtg.Blazor.Components
+
+@inject ApiUtil Api
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized Context="AuthContext">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex flex-column justify-center align-center">
+            <MudText Class="d-flex mb-2" Typo="Typo.h3">Matches</MudText>
+            <MudTable T="Match" Items="_matches">
+                <HeaderContent>
+                    <MudTh>Match Date</MudTh>
+                    <MudTh>Winner</MudTh>
+                    <MudTh>Decks</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.MatchDateOnly</MudTd>
+                    <MudTd>@context.Winner.DeckName</MudTd>
+                    <MudTd>@(string.Join(", ", context.Decks.Select(x => x.DeckName)))</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    private List<Match> _matches = new();
+
+    /// <summary>
+    /// Code that runs after initial render.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _matches = await Api.GetMatches();
+            StateHasChanged();
+        }
+    }
+
+}

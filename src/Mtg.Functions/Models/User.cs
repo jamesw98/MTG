@@ -1,17 +1,19 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Mtg.Functions.Models;
 
+[BsonIgnoreExtraElements]
 public class User
 {
     private const string InvalidJwtMessage = "Token is invalid.";
     
-    [JsonIgnore]
     public string UserId { get; set; }
     public string Nickname { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public string UserName { get; set; }
 
     public User(IEnumerable<Claim> claims)
     {

@@ -2,7 +2,8 @@ namespace Mtg.Blazor.Models;
 
 public class Match
 {
-    public DateOnly MatchDate { get; set; }
+    public DateTime MatchDate { get; set; }
+    public DateOnly MatchDateOnly => DateOnly.FromDateTime(MatchDate);
     public List<Deck> Decks { get; set; } = new();
     public required Deck Winner { get; set; }
     public string? Note { get; set; }
