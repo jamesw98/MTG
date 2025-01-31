@@ -57,6 +57,7 @@
     {
         if (firstRender)
         {
+            // Call an Azure function to get all decks. 
             _decks = await Api.GetDecks();
             StateHasChanged();
         }

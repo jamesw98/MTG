@@ -8,6 +8,9 @@ using Mtg.Blazor.Models;
 
 namespace Mtg.Blazor.Utils;
 
+/// <summary>
+/// Class to call Azure functions and Scryfall.
+/// </summary>
 public class ApiUtil
 {
     /// <summary>
@@ -34,24 +37,24 @@ public class ApiUtil
     private readonly HttpClient _http;
 
     /// <summary>
-    /// URL for this environment's Azure fuctions.
+    /// URL for this environment's Azure functions.
     /// </summary>
     private readonly string _functionsUri; 
 
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="tokenUtil"></param>
-    /// <param name="storageService"></param>
-    /// <param name="http"></param>
-    /// <param name="config"></param>
-    /// <exception cref="DataException"></exception>
+    /// <param name="tokenUtil">DI token service.</param>
+    /// <param name="storageService">DI storage service.</param>
+    /// <param name="http">DI HTTP client.</param>
+    /// <param name="config">Configuration</param>
     public ApiUtil(TokenUtil tokenUtil, ISessionStorageService storageService, HttpClient http, IConfiguration config)
     {
         _tokenUtil = tokenUtil;
         _storageService = storageService;
         _http = http;
 
+        // Attempts to get the function URI from the config.  
         var uri = config.GetSection("FunctionsUri").Value
             ?? throw new DataException("Could not find FunctionUri configuration section.");
         _functionsUri = uri;
@@ -111,12 +114,26 @@ public class ApiUtil
         return decks;
     }
 
+    /// <summary>
+    /// Creates a match for a user.
+    /// </summary>
+    /// <param name="match">The match to create.</param>
     public async Task CreateMatch(Match match)
     {
         await CallApiVoidWithParam<CreateMatchRequest>(HttpMethod.Post, "Match", new CreateMatchRequest
         {
             NewMatch = match
         });
+    }
+    
+    /// <summary>
+    /// Get all matches.
+    /// </summary>
+    /// <returns>A list of matches.</returns>
+    public async Task<List<Match>> GetMatches()
+    {
+        var response = await CallApi<List<Match>>(HttpMethod.Get, "Match");
+        return response;
     }
 
     #region SCRYFALL
@@ -131,7 +148,7 @@ public class ApiUtil
         var jsonString = await response.Content.ReadAsStringAsync();
         var obj = JsonSerializer.Deserialize<ScryFallCard>(jsonString, _jsonOptions) 
                   ?? throw new ArgumentException("Could not parse response from ScryFall api.");
-        return obj.ImageUris.Png;
+        return obj.ImageUris?.Png ?? obj.CardFaces.First().ImageUris.Png;
     }
 
     /// <summary>
@@ -157,14 +174,11 @@ public class ApiUtil
         var response = await CallApiBaseWithParam(method, uri, param);
         if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.NoContent)
         {
-            throw new ApiException("");
+            throw new ApiException($"API returned {response.StatusCode}");
         }
         
         var responseStr = await response.Content.ReadAsStringAsync();
-        var responseObj = JsonSerializer.Deserialize<TReturn>(responseStr, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var responseObj = JsonSerializer.Deserialize<TReturn>(responseStr, _jsonOptions);
 
         if (responseObj is null)
         {
@@ -212,14 +226,11 @@ public class ApiUtil
         var response = await CallApiBase(method, uri);
         if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.NoContent)
         {
-            throw new ApiException("");
+            throw new ApiException($"API returned {response.StatusCode}");
         }
         
         var responseStr = await response.Content.ReadAsStringAsync();
-        var responseObj = JsonSerializer.Deserialize<TReturn>(responseStr, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var responseObj = JsonSerializer.Deserialize<TReturn>(responseStr, _jsonOptions);
 
         if (responseObj is null)
         {
@@ -233,7 +244,7 @@ public class ApiUtil
     {
         var response = await CallApiBase(method, uri);
     }
-
+    
     private async Task<HttpResponseMessage> CallApiBase(HttpMethod method, string uri)
     {
         if (_tokenUtil.Jwt == string.Empty)
@@ -246,6 +257,13 @@ public class ApiUtil
         return res;
     }
     
+    /// <summary>
+    /// Create the base of our HTTP requests.
+    /// </summary>
+    /// <param name="method">The HTTP method to use.</param>
+    /// <param name="uri">The URI to call.</param>
+    /// <param name="authenticated">Whether this call is authenticated.</param>
+    /// <returns>A HttpRequestMessage.</returns>
     private HttpRequestMessage CreateBaseRequest(HttpMethod method, string uri, bool authenticated=true)
     {
         var request = new HttpRequestMessage(method, $"{_functionsUri}{uri}");
